@@ -1,0 +1,214 @@
+import type { UserRole } from '@/types/auth';
+
+// Available permissions in the system
+export const PERMISSIONS = {
+  // User management
+  USER_VIEW: 'user:view',
+  USER_CREATE: 'user:create',
+  USER_UPDATE: 'user:update',
+  USER_DELETE: 'user:delete',
+  USER_ACTIVATE: 'user:activate',
+  USER_DEACTIVATE: 'user:deactivate',
+
+  // Business center management
+  BUSINESS_CENTER_VIEW: 'business_center:view',
+  BUSINESS_CENTER_CREATE: 'business_center:create',
+  BUSINESS_CENTER_UPDATE: 'business_center:update',
+  BUSINESS_CENTER_DELETE: 'business_center:delete',
+  BUSINESS_CENTER_APPROVE: 'business_center:approve',
+  BUSINESS_CENTER_REJECT: 'business_center:reject',
+
+  // Staff management
+  STAFF_VIEW: 'staff:view',
+  STAFF_CREATE: 'staff:create',
+  STAFF_UPDATE: 'staff:update',
+  STAFF_DELETE: 'staff:delete',
+
+  // Service management
+  SERVICE_VIEW: 'service:view',
+  SERVICE_CREATE: 'service:create',
+  SERVICE_UPDATE: 'service:update',
+  SERVICE_DELETE: 'service:delete',
+
+  // Appointment management
+  APPOINTMENT_VIEW: 'appointment:view',
+  APPOINTMENT_CREATE: 'appointment:create',
+  APPOINTMENT_UPDATE: 'appointment:update',
+  APPOINTMENT_DELETE: 'appointment:delete',
+  APPOINTMENT_APPROVE: 'appointment:approve',
+  APPOINTMENT_CANCEL: 'appointment:cancel',
+  APPOINTMENT_COMPLETE: 'appointment:complete',
+
+  // Analytics and reporting
+  ANALYTICS_VIEW: 'analytics:view',
+  REPORTS_VIEW: 'reports:view',
+  REPORTS_EXPORT: 'reports:export',
+
+  // System administration
+  SYSTEM_SETTINGS: 'system:settings',
+  SYSTEM_MAINTENANCE: 'system:maintenance',
+} as const;
+
+// Role-based permissions mapping
+export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
+  'app-admin': [
+    // Full system access
+    PERMISSIONS.USER_VIEW,
+    PERMISSIONS.USER_CREATE,
+    PERMISSIONS.USER_UPDATE,
+    PERMISSIONS.USER_DELETE,
+    PERMISSIONS.USER_ACTIVATE,
+    PERMISSIONS.USER_DEACTIVATE,
+    
+    PERMISSIONS.BUSINESS_CENTER_VIEW,
+    PERMISSIONS.BUSINESS_CENTER_CREATE,
+    PERMISSIONS.BUSINESS_CENTER_UPDATE,
+    PERMISSIONS.BUSINESS_CENTER_DELETE,
+    PERMISSIONS.BUSINESS_CENTER_APPROVE,
+    PERMISSIONS.BUSINESS_CENTER_REJECT,
+    
+    PERMISSIONS.STAFF_VIEW,
+    PERMISSIONS.STAFF_CREATE,
+    PERMISSIONS.STAFF_UPDATE,
+    PERMISSIONS.STAFF_DELETE,
+    
+    PERMISSIONS.SERVICE_VIEW,
+    PERMISSIONS.SERVICE_CREATE,
+    PERMISSIONS.SERVICE_UPDATE,
+    PERMISSIONS.SERVICE_DELETE,
+    
+    PERMISSIONS.APPOINTMENT_VIEW,
+    PERMISSIONS.APPOINTMENT_CREATE,
+    PERMISSIONS.APPOINTMENT_UPDATE,
+    PERMISSIONS.APPOINTMENT_DELETE,
+    PERMISSIONS.APPOINTMENT_APPROVE,
+    PERMISSIONS.APPOINTMENT_CANCEL,
+    PERMISSIONS.APPOINTMENT_COMPLETE,
+    
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+    
+    PERMISSIONS.SYSTEM_SETTINGS,
+    PERMISSIONS.SYSTEM_MAINTENANCE,
+  ],
+
+  'businesscenter-admin': [
+    // Business center administration
+    PERMISSIONS.BUSINESS_CENTER_VIEW,
+    PERMISSIONS.BUSINESS_CENTER_UPDATE,
+    
+    PERMISSIONS.STAFF_VIEW,
+    PERMISSIONS.STAFF_CREATE,
+    PERMISSIONS.STAFF_UPDATE,
+    PERMISSIONS.STAFF_DELETE,
+    
+    PERMISSIONS.SERVICE_VIEW,
+    PERMISSIONS.SERVICE_CREATE,
+    PERMISSIONS.SERVICE_UPDATE,
+    PERMISSIONS.SERVICE_DELETE,
+    
+    PERMISSIONS.APPOINTMENT_VIEW,
+    PERMISSIONS.APPOINTMENT_CREATE,
+    PERMISSIONS.APPOINTMENT_UPDATE,
+    PERMISSIONS.APPOINTMENT_DELETE,
+    PERMISSIONS.APPOINTMENT_APPROVE,
+    PERMISSIONS.APPOINTMENT_CANCEL,
+    PERMISSIONS.APPOINTMENT_COMPLETE,
+    
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+
+  'businesscenter': [
+    // Business center staff operations
+    PERMISSIONS.SERVICE_VIEW,
+    
+    PERMISSIONS.APPOINTMENT_VIEW,
+    PERMISSIONS.APPOINTMENT_UPDATE,
+    PERMISSIONS.APPOINTMENT_CANCEL,
+    PERMISSIONS.APPOINTMENT_COMPLETE,
+  ],
+
+  'customer': [
+    // Customer operations
+    PERMISSIONS.BUSINESS_CENTER_VIEW,
+    PERMISSIONS.SERVICE_VIEW,
+    
+    PERMISSIONS.APPOINTMENT_VIEW,
+    PERMISSIONS.APPOINTMENT_CREATE,
+    PERMISSIONS.APPOINTMENT_UPDATE,
+    PERMISSIONS.APPOINTMENT_CANCEL,
+  ],
+};
+
+// Helper function to check if user has permission
+export const hasPermission = (userRole: UserRole, permission: string): boolean => {
+  return ROLE_PERMISSIONS[userRole]?.includes(permission) ?? false;
+};
+
+// Helper function to check if user has any of the permissions
+export const hasAnyPermission = (userRole: UserRole, permissions: string[]): boolean => {
+  return permissions.some(permission => hasPermission(userRole, permission));
+};
+
+// Helper function to check if user has all permissions
+export const hasAllPermissions = (userRole: UserRole, permissions: string[]): boolean => {
+  return permissions.every(permission => hasPermission(userRole, permission));
+};
+
+// Permission groups for easier management
+export const PERMISSION_GROUPS = {
+  USER_MANAGEMENT: [
+    PERMISSIONS.USER_VIEW,
+    PERMISSIONS.USER_CREATE,
+    PERMISSIONS.USER_UPDATE,
+    PERMISSIONS.USER_DELETE,
+    PERMISSIONS.USER_ACTIVATE,
+    PERMISSIONS.USER_DEACTIVATE,
+  ],
+  
+  BUSINESS_CENTER_MANAGEMENT: [
+    PERMISSIONS.BUSINESS_CENTER_VIEW,
+    PERMISSIONS.BUSINESS_CENTER_CREATE,
+    PERMISSIONS.BUSINESS_CENTER_UPDATE,
+    PERMISSIONS.BUSINESS_CENTER_DELETE,
+    PERMISSIONS.BUSINESS_CENTER_APPROVE,
+    PERMISSIONS.BUSINESS_CENTER_REJECT,
+  ],
+  
+  STAFF_MANAGEMENT: [
+    PERMISSIONS.STAFF_VIEW,
+    PERMISSIONS.STAFF_CREATE,
+    PERMISSIONS.STAFF_UPDATE,
+    PERMISSIONS.STAFF_DELETE,
+  ],
+  
+  SERVICE_MANAGEMENT: [
+    PERMISSIONS.SERVICE_VIEW,
+    PERMISSIONS.SERVICE_CREATE,
+    PERMISSIONS.SERVICE_UPDATE,
+    PERMISSIONS.SERVICE_DELETE,
+  ],
+  
+  APPOINTMENT_MANAGEMENT: [
+    PERMISSIONS.APPOINTMENT_VIEW,
+    PERMISSIONS.APPOINTMENT_CREATE,
+    PERMISSIONS.APPOINTMENT_UPDATE,
+    PERMISSIONS.APPOINTMENT_DELETE,
+    PERMISSIONS.APPOINTMENT_APPROVE,
+    PERMISSIONS.APPOINTMENT_CANCEL,
+    PERMISSIONS.APPOINTMENT_COMPLETE,
+  ],
+  
+  ANALYTICS_REPORTS: [
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+  ],
+  
+  SYSTEM_ADMINISTRATION: [
+    PERMISSIONS.SYSTEM_SETTINGS,
+    PERMISSIONS.SYSTEM_MAINTENANCE,
+  ],
+} as const; 
